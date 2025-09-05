@@ -6,31 +6,28 @@
 
 int main() {
 
-    int i, j;
+    int i, j, k;//controle do for
+    int linha_h, coluna_h, linha_v, coluna_v, linha_dd, linha_de;//váriaveis navios
     // Nível Novato - Posicionamento dos Navios
     // Declare uma matriz bidimensional para representar o tabuleiro (Ex: int tabuleiro[5][5];).
     int tabuleiro [10][10];
     int linha[10];
     char coluna[10];//vetores representando as linhas (numeros) e colunas (letras)
+    int sobreposicao = 0;// Flag para verificar sobreposição. Reiniciada para cada navio.
 
 
     //1 - preenchendo as colunas, linhas e tabuleiro
-    //preenchendo as colunas
+    //preenchendo as colunas com letras
     for (i = 0; i < 10; i++)
     {
         coluna[i] = 'A'+i;
-    }
-    
-    //preenchendo o vetor com as letras
-    for (i = 0; i < 10; i++)
-    {
         linha[i] = 1+i;
     }
-
+    
     //preenchendo o tabuleiro com a água
     for (i = 0; i < 10; i++)
     {
-        for (size_t j = 0; j < 10; j++)
+        for (j = 0; j < 10; j++)
         {
             tabuleiro[i][j] = 0;
         }
@@ -52,6 +49,7 @@ int main() {
     }
     printf("\n");
 
+    //Imprime o tabuleiro somente com água
     for (i = 0; i < 10; i++)
     {
         printf ("%2d ", linha[i]);// O formato '%2d' garante que o 10 (com 2 dígitos) não vai desalinhar o tabuleiro
@@ -65,22 +63,55 @@ int main() {
     }
     printf("\n");
 
+
+    // Posicionando os 4 navios
+    sobreposicao = 0;
+
+    //Navio 1
+    int linha_h = 4, coluna_h = 1;
+    if (coluna_h+3 <= 10)
+    {
+        for (k = 0; k < 3; k++)
+        {
+            tabuleiro[linha_h][coluna_h + k] = 3;
+        } 
+    }
+
+    // Posicionando Navio 2 (Vertical, 3 casas)
+    int linha_v = 6, coluna_v = 8;
+    sobreposicao = 0;
+
+    if (linha_v + 3 <= 10)
+    {
+       for (k = 0; k < 3; k++)//validando a sobreposição primeiro
+        {
+            if (tabuleiro[linha_v + k][coluna_v] != 0)
+            {
+                sobreposicao = 1; 
+                break;
+            }
+        }
+         if (!sobreposicao)//Se não tiver sobreposição, posiciona
+        {
+            for (k = 0; k < 3; k++)
+            {
+                tabuleiro[linha_v + k][coluna_v] = 3;
+            }
+            
+        } 
+    }
+    
+    //Posicionando o navio 3 (diagonal para direita)
+
+    //posicionando o navio 4 (diagonal para esquerda)
+
+
     printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-    printf("Veja os dois navios do tabuleiro representados por 3.\n");
+    printf("Veja os navios do tabuleiro representados por 3.\n");
     printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
     printf("\n");
 
-     // Posicionando Navio 1 (Horizontal, 3 casas)
-    // Na linha 3, colunas 2, 3 e 4
-    tabuleiro[3][2] = 3;
-    tabuleiro[3][3] = 3;
-    tabuleiro[3][4] = 3;
-
-    // Posicionando Navio 2 (Vertical, 3 casas)
-    tabuleiro[5][7] = 3;
-    tabuleiro[6][7] = 3;
-    tabuleiro[7][7] = 3;
-
+    //impressão do cabeçalho
     printf("   ");
     for (i = 0; i < 10; i++)
     {
