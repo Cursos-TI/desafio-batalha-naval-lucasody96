@@ -7,7 +7,7 @@
 int main() {
 
     int i, j, k;//controle do for
-    int linha_h, coluna_h, linha_v, coluna_v, linha_dd, linha_de;//váriaveis navios
+    int linha_h, coluna_h, linha_v, coluna_v, linha_dd, coluna_dd, linha_de, coluna_de;//váriaveis navios
     // Nível Novato - Posicionamento dos Navios
     // Declare uma matriz bidimensional para representar o tabuleiro (Ex: int tabuleiro[5][5];).
     int tabuleiro [10][10];
@@ -67,9 +67,9 @@ int main() {
     // Posicionando os 4 navios
     sobreposicao = 0;
 
-    //Navio 1
-    int linha_h = 4, coluna_h = 1;
-    if (coluna_h+3 <= 10)
+    //Navio 1 (horizontal, 3 casas)
+    linha_h = 4, coluna_h = 1;
+    if (coluna_h + 3 <= 10)
     {
         for (k = 0; k < 3; k++)
         {
@@ -78,7 +78,7 @@ int main() {
     }
 
     // Posicionando Navio 2 (Vertical, 3 casas)
-    int linha_v = 6, coluna_v = 8;
+    linha_v = 6, coluna_v = 8;
     sobreposicao = 0;
 
     if (linha_v + 3 <= 10)
@@ -102,8 +102,57 @@ int main() {
     }
     
     //Posicionando o navio 3 (diagonal para direita)
+    linha_dd = 1, coluna_dd = 1;
+    sobreposicao = 0;
+
+    if ((linha_dd + 3 <= 10) && (coluna_dd + 3 <= 10))
+    {
+
+        for (k = 0; k < 3; k++)//validando a sobreposição primeiro
+        {
+            if (tabuleiro[linha_dd + k][coluna_dd + k] != 0)
+            {
+                sobreposicao = 1; 
+                break;
+            }
+        }
+
+         if (!sobreposicao)//Se não tiver sobreposição, posiciona
+        {
+            for (k = 0; k < 3; k++)
+            {
+                tabuleiro[linha_dd + k][coluna_dd + k] = 3;
+            }
+            
+        } 
+    }
 
     //posicionando o navio 4 (diagonal para esquerda)
+    linha_de = 1, coluna_de = 8;
+    sobreposicao = 0;
+
+    if ((linha_de + 3 <= 10) && (coluna_de - (3-1) >= 0))
+    {
+
+        for (k = 0; k < 3; k++)//validando a sobreposição primeiro
+        {
+            if (tabuleiro[linha_de + k][coluna_de - k] != 0)
+            {
+                sobreposicao = 1; 
+                break;
+            }
+        }
+
+        if (!sobreposicao)//Se não tiver sobreposição, posiciona
+        {
+            for (k = 0; k < 3; k++)
+            {
+                tabuleiro[linha_de + k][coluna_de - k] = 3;
+            }
+            
+        } 
+    }
+
 
 
     printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
