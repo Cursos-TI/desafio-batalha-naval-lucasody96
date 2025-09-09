@@ -1,8 +1,82 @@
 #include <stdio.h>
-
+#include <stdlib.h> // Necessário para a função abs()
 // Desafio Batalha Naval - MateCheck
 // Este código inicial serve como base para o desenvolvimento do sistema de Batalha Naval.
-// Siga os comentários para implementar cada parte do desafio.
+
+// A lógica cria um triângulo que se expande, limitado a altura para 3 linhas.
+void gerarHabilidadeCone(int matriz[5][5]) {
+    int centro = 5 / 2; // coluna central
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            // Preenche só até a linha 2 (3 níveis do cone)
+            if (i <= 2 && abs(j - centro) <= i) {
+                matriz[i][j] = 1;
+            } else {
+                matriz[i][j] = 0;
+            }
+        }
+    }
+}
+
+// Função para gerar a matriz da habilidade em Cruz
+// afeta a linha central e a coluna central.
+void gerarHabilidadeCruz(int matriz[5][5]) {
+    int i, j;
+    int centro = 5 / 2;
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            // A condição é verdadeira se o ponto estiver na linha central OU na coluna central.
+            if (i == centro || j == centro) {
+                matriz[i][j] = 1;
+            } else {
+                matriz[i][j] = 0;
+            }
+        }
+    }
+}
+
+// Função para gerar a matriz da habilidade em Octaedro (Losango)
+// Um losango é definido pela distância do centro. 
+void gerarHabilidadeOctaedro(int matriz[5][5]) {
+    int i, j;
+    int centro = 5 / 2;
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            // A soma das distâncias vertical e horizontal do centro deve ser <= ao raio (centro).
+            if (abs(i - centro) + abs(j - centro) <= centro) {
+                matriz[i][j] = 1;
+            } else {
+                matriz[i][j] = 0;
+            }
+        }
+    }
+}
+
+void aplicarHabilidade(int tabuleiro[10][10], int habilidade[5][5], int origem_linha, int origem_coluna) {
+    int i_hab, j_hab;
+    int centro_hab = 5 / 2;
+
+    for (i_hab = 0; i_hab < 5; i_hab++) {
+        for (j_hab = 0; j_hab < 5; j_hab++) {
+            if (habilidade[i_hab][j_hab] == 1) {
+                int offset_linha = i_hab - centro_hab;
+                int offset_coluna = j_hab - centro_hab;
+
+                int linha_no_tabuleiro = origem_linha + offset_linha;
+                int coluna_no_tabuleiro = origem_coluna + offset_coluna;
+
+                if ((linha_no_tabuleiro >= 0 && linha_no_tabuleiro < 10) &&
+                    (coluna_no_tabuleiro >= 0 && coluna_no_tabuleiro < 10)) {
+                    
+                    // Marca qualquer coisa (0 ou 3) como 5 → mostrando dano
+                    tabuleiro[linha_no_tabuleiro][coluna_no_tabuleiro] = 5;
+                }
+            }
+        }
+    }
+}
+
+
 
 int main() {
 
@@ -63,11 +137,13 @@ int main() {
     }
     printf("\n");
 
-
-    // Posicionando os 4 navios
+    printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
+    printf("Tabuleiro aventureiro em que o 0 representa a água e 3 os navios!\n");
+    printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
+    // Posicionando os 4 navios 
     sobreposicao = 0;
 
-    //Navio 1 (horizontal, 3 casas)
+    //Navio 1 
     linha_h = 4, coluna_h = 1;
     if (coluna_h + 3 <= 10)
     {
@@ -77,7 +153,7 @@ int main() {
         } 
     }
 
-    // Posicionando Navio 2 (Vertical, 3 casas)
+    // Navio 2 
     linha_v = 6, coluna_v = 8;
     sobreposicao = 0;
 
@@ -101,7 +177,7 @@ int main() {
         } 
     }
     
-    //Posicionando o navio 3 (diagonal para direita)
+    //Posicionando o navio 3
     linha_dd = 1, coluna_dd = 1;
     sobreposicao = 0;
 
@@ -153,13 +229,6 @@ int main() {
         } 
     }
 
-
-
-    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-    printf("Veja os navios do tabuleiro representados por 3.\n");
-    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-    printf("\n");
-
     //impressão do cabeçalho
     printf("   ");
     for (i = 0; i < 10; i++)
@@ -182,33 +251,42 @@ int main() {
     }
     printf("\n");
 
-
-
-    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
-    // Sugestão: Expanda o tabuleiro para uma matriz 10x10.
-    // Sugestão: Posicione quatro navios no tabuleiro, incluindo dois na diagonal.
-    // Sugestão: Exiba o tabuleiro completo no console, mostrando 0 para posições vazias e 3 para posições ocupadas.
-
     // Nível Mestre - Habilidades Especiais com Matrizes
-    // Sugestão: Crie matrizes para representar habilidades especiais como cone, cruz, e octaedro.
-    // Sugestão: Utilize estruturas de repetição aninhadas para preencher as áreas afetadas por essas habilidades no tabuleiro.
-    // Sugestão: Exiba o tabuleiro com as áreas afetadas, utilizando 0 para áreas não afetadas e 1 para áreas atingidas.
+    // 1. Criar as matrizes de habilidade (5x5)
+    int hab_cone[5][5];
+    int hab_cruz[5][5];
+    int hab_octaedro[5][5];
 
-    // Exemplos de exibição das habilidades:
-    // Exemplo para habilidade em cone:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 1 1 1 1 1
+    // 2. Gerar os padrões de efeito dinamicamente usando as funções
+    gerarHabilidadeCone(hab_cone);
+    gerarHabilidadeCruz(hab_cruz);
+    gerarHabilidadeOctaedro(hab_octaedro);
+
+    // 3. Definir pontos de origem e aplicar as habilidades no tabuleiro
+    // As coordenadas de origem são o CENTRO onde a habilidade será aplicada.
+    aplicarHabilidade(tabuleiro, hab_cone, 2, 4);      // Ponta do cone, na linha 1
+    aplicarHabilidade(tabuleiro, hab_cruz, 7, 3);      // Cruz na parte de baixo
+    aplicarHabilidade(tabuleiro, hab_octaedro, 3, 7);  // Octaedro (losango) perto da borda
+
+
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
+    printf("Tabuleiro nível mestre em que o 0 representa a água e 3 os navios e 5 as habilidades especiais!\n");
+    printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n");
     
-    // Exemplo para habilidade em octaedro:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 0 0 1 0 0
-
-    // Exemplo para habilidade em cruz:
-    // 0 0 1 0 0
-    // 1 1 1 1 1
-    // 0 0 1 0 0
+    //impressão do cabeçalho
+    printf("   ");
+    for (i = 0; i < 10; i++)
+    {
+        printf ("%c ", coluna[i]);
+    }
+    printf("\n");
+    for (i = 0; i < 10; i++) {
+        printf("%2d ", i + 1);
+        for (j = 0; j < 10; j++) {
+            printf("%d ", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
 
     return 0;
 }
